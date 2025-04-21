@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock Sentiment Chatbot</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      background-color: #d0ebff;
+      padding: 20px;
+      width: 100%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header h3 {
+      margin: 4px 0;
+    }
+
+    h2 {
+      margin-top: 20px;
+      color: #333;
+    }
+
+    #chat-container {
+      background: #fff;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    #chat-box {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #fdfdfd;
+      border-radius: 6px;
+    }
+
+    .msg {
+      padding: 8px 12px;
+      margin: 6px 0;
+      border-radius: 10px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .user-msg {
+      background-color: #d0ebff;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .bot-msg {
+      background-color: #e6ffe6;
+      align-self: flex-start;
+      margin-right: auto;
+    }
+
+    #input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h3>Name: Riya Singh</h3>
+    <h3>Class: K23PS</h3>
+    <h3>Registration number : 12325638</h3>
+    <h3>Roll no. 58</h3>
+    <h3>INT 428 CA-3 Project</h3>
+    <h3>Topic: Analyzing Realtime Stock Sentiment from News and Social Media</h3>
+    <h3>Group: 4</h3>
+  </header>
+
+  <h2>Stock Sentiment Chatbot</h2>
+
+  <div id="chat-container">
+    <div id="chat-box"></div>
+
+    <div id="input-area">
+      <input type="text" id="user-input" placeholder="Ask about a stock sentiment...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const userInput = document.getElementById("user-input").value.trim();
+      if (!userInput) return;
+
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML += `<div class="msg user-msg"><b>You:</b> ${userInput}</div>`;
+
+      fetch("http://127.0.0.1:5000/chatbot?query=" + encodeURIComponent(userInput))
+        .then(response => response.json())
+        .then(data => {
+          chatBox.innerHTML += `<div class="msg bot-msg"><b>Bot:</b> ${data.reply}</div>`;
+          chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+      document.getElementById("user-input").value = "";
+    }
+
+    document.getElementById("user-input").addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();  // Prevent form submission if inside a form
+      sendMessage();
+    }
+  });
+  </script>
+
+</body>
+</html>
